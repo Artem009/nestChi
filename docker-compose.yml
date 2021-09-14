@@ -1,0 +1,34 @@
+version: '3'
+services:
+  dev:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    command: npm run start:debug
+    ports:
+      - 3000:3000
+      - 9229:9229
+    networks:
+      - nesjs-network
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    restart: unless-stopped
+#  mysql:
+#    image: mysql:8.0
+#    ports:
+#      - "3306:3306"
+#    volumes:
+#      - ./config/mysql/mysql.cnf:/etc/mysql/conf.d/mysql.cnf:ro
+#      - ./data/mysql:/var/lib/mysql
+#    environment:
+#      MYSQL_ROOT_PASSWORD: "root"
+#
+#  redis:
+#    image: redis:alpine
+#    ports:
+#      - "6379:6379"
+#    volumes:
+#      - ./data/redis:/data
+networks:
+  nesjs-network:
