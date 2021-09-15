@@ -46,15 +46,12 @@ services:
     image: mysql:8.0
     container_name: mysql
     ports:
-      - "3306:3306"
+      - "3307:3306"
     logging:
       driver: "json-file"
       options:
         max-file: "3"
         max-size: "50m"
-    volumes:
-      - ./config/mysql/mysql.cnf:/etc/mysql/conf.d/mysql.cnf:ro
-      - ./data/mysql:/var/lib/mysql
     networks:
       - nesjs-network
     environment:
@@ -74,8 +71,6 @@ services:
       options:
         max-file: "3"
         max-size: "50m"
-    volumes:
-      - ./data/redis:/data
 
 networks:
   nesjs-network:
