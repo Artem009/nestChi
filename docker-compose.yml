@@ -4,11 +4,18 @@ services:
   dev:
     container_name: nestjs_api_dev
     image: nestjs-api-dev:1.0.0
+    env_file:
+      - .env
     build:
       context: .
       target: development
       dockerfile: ./Dockerfile
     command: npm run start:debug
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "3"
+        max-size: "50m"
     ports:
       - 3000:3000
       - 9229:9229
@@ -18,36 +25,55 @@ services:
       - .:/usr/src/app
       - /usr/src/app/node_modules
     restart: unless-stopped
-#  prod:
-#    container_name: nestjs_api_prod
-#    image: nestjs-api-prod:1.0.0
-#    build:
-#      context: .
-#      target: production
-#      dockerfile: ./Dockerfile
-#    command: npm run start:prod
-#    ports:
-#      - 3000:3000
-#      - 9229:9229
-#    networks:
-#      - nesjs-network
-#    volumes:
-#      - .:/usr/src/app
-#      - /usr/src/app/node_modules
-#    restart: unless-stopped
+  prod:
+    container_name: nestjs_api_prod
+    image: nestjs-api-prod:1.0.0
+    build:
+      context: .
+      target: production
+      dockerfile: ./Dockerfile
+    command: npm run start:prod
+    ports:
+      - 3000:3000
+      - 9229:9229
+    networks:
+      - nesjs-network
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    restart: unless-stopped
   mysql:
     image: mysql:8.0
+    container_name: mysql
     ports:
       - "3306:3306"
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "3"
+        max-size: "50m"
     volumes:
       - ./config/mysql/mysql.cnf:/etc/mysql/conf.d/mysql.cnf:ro
       - ./data/mysql:/var/lib/mysql
+    networks:
+      - nesjs-network
     environment:
-      MYSQL_ROOT_PASSWORD: "root"
+      MYSQL_DATABASE: testDb
+      MYSQL_USER: user
+      MYSQL_PASSWORD: Password123
+      MYSQL_ROOT_PASSWORD: Password123
   redis:
     image: redis:alpine
+    container_name: redis
+    networks:
+      - nesjs-network
     ports:
       - "6379:6379"
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "3"
+        max-size: "50m"
     volumes:
       - ./data/redis:/data
 
