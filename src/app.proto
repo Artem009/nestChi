@@ -1,0 +1,32 @@
+syntax = "proto3";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/duration.proto";
+package app;
+
+// Declare a service for each controller you have
+service AppController {
+  // Declare an rpc for each method that is called via gRPC
+  rpc Accumulate (NumberArray) returns (SumOfNumberArray);
+}
+
+// Declare the types used above
+message NumberArray {
+  repeated double data = 1;
+}
+
+message TimestampRule {
+  google.protobuf.Timestamp gte = 4;
+}
+
+message SumOfNumberArray {
+  string sum = 1;
+}
+
+message Date {
+  // Lte specifies that this field must be less than the specified value,
+  // inclusive
+  optional google.protobuf.Timestamp lte = 4;
+  // Gte specifies that this field must be greater than the specified value,
+  // inclusive
+  optional google.protobuf.Timestamp gte = 6;
+}
